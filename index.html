@@ -6,188 +6,214 @@
     <title>Secret Santa Celebration</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
-            margin: 0;
-            padding: 0;
             background-color: #f0f0f0;
-            overflow: hidden;
+            padding: 20px;
+            margin: 0;
         }
-
-        /* Snowflakes */
-        .snowflake {
-            position: absolute;
-            color: white;
-            font-size: 20px;
-            opacity: 0.8;
-            user-select: none;
-            z-index: 999;
+        .page {
+            display: none;
         }
-
-        #container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
+        .active {
+            display: block;
         }
-
         h1 {
-            font-size: 36px;
-            color: #c0392b;
+            font-size: 2.5em;
             margin-top: 20px;
         }
-
-        #startButton, #nextButton {
-            background-color: #e74c3c;
-            border: none;
-            color: white;
-            padding: 15px 30px;
-            font-size: 18px;
-            margin-top: 20px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        #startButton:hover, #nextButton:hover {
-            background-color: #c0392b;
-        }
-
         #wheel {
             width: 300px;
             height: 300px;
             border-radius: 50%;
             border: 5px solid #000;
             position: relative;
-            margin: 40px auto;
-            background: conic-gradient(#f00 0% 25%, #0f0 25% 50%, #00f 50% 75%, #ff0 75% 100%);
+            margin: 20px auto;
+            background: conic-gradient(
+                #f00 0% 25%,  /* Color sectors 1 */
+                #0f0 25% 50%, /* Color sectors 2 */
+                #00f 50% 75%, /* Color sectors 3 */
+                #ff0 75% 100% /* Color sectors 4 */
+            );
         }
-
-        .option-buttons {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
+        .sector-label {
+            position: absolute;
+            font-size: 12px;
+            color: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
         }
-
-        .option-buttons button {
-            background: url('https://example.com/candy-cane.png') no-repeat center;
-            background-size: 20px 20px;
-            padding-left: 35px;
-            font-size: 16px;
+        #spinButton {
+            padding: 10px 20px;
+            font-size: 1.5em;
+            background-color: #007bff;
+            color: white;
             border: none;
-            color: #333;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.3s;
+            margin-top: 20px;
         }
-
-        .option-buttons button:hover {
-            background-color: #f39c12;
+        #spinButton:disabled {
+            background-color: #cccccc;
         }
-
-        .hidden {
-            display: none;
+        .option-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .option-buttons button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .option-buttons button:disabled {
+            background-color: #cccccc;
+        }
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <h1>Secret Santa Celebration</h1>
-        <div id="page1" class="page">
-            <button id="startButton">Start Celebration</button>
+    <!-- Page 1 - Introduction -->
+    <div id="page1" class="page active">
+        <h1>Welcome to the Secret Santa Celebration!</h1>
+        <button id="startButton" onclick="startProcess()">Start Celebration</button>
+    </div>
+
+    <!-- Page 2 - Spinning Wheel -->
+    <div id="page2" class="page">
+        <h1>Secret Santa</h1>
+        <div id="wheel">
+            <div class="sector-label" id="sector1">Item 1</div>
+            <div class="sector-label" id="sector2">Item 2</div>
+            <div class="sector-label" id="sector3">Item 3</div>
+            <div class="sector-label" id="sector4">Item 4</div>
         </div>
-        <div id="page2" class="page hidden">
-            <div id="wheel"></div>
-            <button id="nextButton">Next</button>
-        </div>
-        <div id="page3" class="page hidden">
-            <h2>What would you like to do the most?</h2>
-            <div class="option-buttons">
-                <button id="cooking">Cooking</button>
-                <button id="traveling">Traveling</button>
-                <button id="bingeWatching">Binge Watching</button>
-                <button id="reading">Reading</button>
-            </div>
-            <button id="nextButton2" class="hidden">Next</button>
-        </div>
-        <div id="page4" class="page hidden">
-            <h2>Your gift is:</h2>
-            <div id="gift"></div>
-            <button id="repeatButton">Let's do that again</button>
+        <button id="spinButton" onclick="spinWheel()">Spin the Wheel</button>
+    </div>
+
+    <!-- Page 3 - Question & Options -->
+    <div id="page3" class="page">
+        <h1>What would you like to do the most?</h1>
+        <div class="option-buttons">
+            <button onclick="selectOption('cooking')">Cooking</button>
+            <button onclick="selectOption('traveling')">Traveling</button>
+            <button onclick="selectOption('bingeWatching')">Binge Watching</button>
+            <button onclick="selectOption('reading')">Reading</button>
         </div>
     </div>
 
+    <!-- Page 4 - Result & Wishes -->
+    <div id="page4" class="page">
+        <h1 id="giftTitle">The Gift Has Been Revealed!</h1>
+        <p id="giftDescription">Your special gift awaits!</p>
+        <button onclick="restartCelebration()">Let's do that again</button>
+    </div>
+
     <script>
-        // Snowflakes falling randomly
-        function createSnowflakes() {
-            const numberOfSnowflakes = 50;
-            for (let i = 0; i < numberOfSnowflakes; i++) {
+        let selectedOption = null;
+
+        const startProcess = () => {
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+        };
+
+        const selectOption = (option) => {
+            selectedOption = option;
+            document.getElementById('page3').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+            fillWheelWithItems();
+        };
+
+        const fillWheelWithItems = () => {
+            const items = getItemsForOption(selectedOption);
+            document.getElementById('sector1').innerText = items[0];
+            document.getElementById('sector2').innerText = items[1];
+            document.getElementById('sector3').innerText = items[2];
+            document.getElementById('sector4').innerText = items[3];
+        };
+
+        const getItemsForOption = (option) => {
+            switch (option) {
+                case 'cooking':
+                    return ['Cookbook', 'Kitchen Tools', 'Apron', 'Perfume (to smell good while making food delicious)'];
+                case 'traveling':
+                    return ['Backpack', 'Guidebook', 'Plane Tickets', 'Perfume (to leave a trail of our fragrance)'];
+                case 'bingeWatching':
+                    return ['Popcorn Maker', 'Blanket', 'TV Series Subscription', 'Perfume (to smell good during long shows)'];
+                case 'reading':
+                    return ['Bookmarks', 'E-reader', 'Reading Glasses', 'Perfume (to leave a scent while reading)'];
+                default:
+                    return ['Perfume (for everyone)'];
+            }
+        };
+
+        const spinWheel = () => {
+            document.getElementById('spinButton').disabled = true;
+            setTimeout(() => {
+                // Simulate spinning and always stop on "Perfume"
+                document.getElementById('wheel').style.transform = 'rotate(1080deg)';
+                setTimeout(() => {
+                    document.getElementById('page2').classList.remove('active');
+                    document.getElementById('page4').classList.add('active');
+                    document.getElementById('giftDescription').innerText = 'Perfume (for everyone)';
+                    document.getElementById('giftTitle').innerText = 'Congratulations! You Won Perfume!';
+                }, 3000);
+            }, 500);
+        };
+
+        const restartCelebration = () => {
+            document.getElementById('page4').classList.remove('active');
+            document.getElementById('page1').classList.add('active');
+        };
+
+        // Snowfall Effect
+        const createSnowflakes = () => {
+            const snowflakeCount = 50;
+            for (let i = 0; i < snowflakeCount; i++) {
                 let snowflake = document.createElement('div');
                 snowflake.classList.add('snowflake');
-                snowflake.innerHTML = '❄';
-                snowflake.style.fontSize = Math.random() * 20 + 'px';
-                snowflake.style.left = Math.random() * 100 + 'vw';
-                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.position = 'absolute';
+                snowflake.style.left = Math.random() * window.innerWidth + 'px';
+                snowflake.style.animationDuration = Math.random() * 5 + 5 + 's'; // Random speed
+                snowflake.style.animationDelay = Math.random() * 5 + 's'; // Random delay
+                snowflake.style.animationName = 'fall';
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px'; // Random size
+                snowflake.innerText = '❄️';
                 document.body.appendChild(snowflake);
-                snowflake.style.animation = `fall ${Math.random() * 10 + 5}s linear infinite`;
             }
-        }
+        };
 
         createSnowflakes();
 
-        // Show the next page
-        function showPage(pageNumber) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.add('hidden'));
-            document.getElementById('page' + pageNumber).classList.remove('hidden');
-        }
-
-        // Page 1: Start celebration button
-        document.getElementById('startButton').addEventListener('click', () => {
-            showPage(2);
-        });
-
-        // Page 2: Wheel setup
-        document.getElementById('nextButton').addEventListener('click', () => {
-            showPage(3);
-        });
-
-        // Page 3: Options
-        document.getElementById('cooking').addEventListener('click', () => {
-            // Handle selection logic
-            alert('Cooking selected!');
-            document.getElementById('nextButton2').classList.remove('hidden');
-        });
-
-        document.getElementById('traveling').addEventListener('click', () => {
-            // Handle selection logic
-            alert('Traveling selected!');
-            document.getElementById('nextButton2').classList.remove('hidden');
-        });
-
-        document.getElementById('bingeWatching').addEventListener('click', () => {
-            // Handle selection logic
-            alert('Binge Watching selected!');
-            document.getElementById('nextButton2').classList.remove('hidden');
-        });
-
-        document.getElementById('reading').addEventListener('click', () => {
-            // Handle selection logic
-            alert('Reading selected!');
-            document.getElementById('nextButton2').classList.remove('hidden');
-        });
-
-        // Page 4: Gift Reveal
-        document.getElementById('nextButton2').addEventListener('click', () => {
-            showPage(4);
-            document.getElementById('gift').innerHTML = 'Perfume (to smell good while making food delicious)'; // example gift
-        });
-
-        // Reset and restart the game
-        document.getElementById('repeatButton').addEventListener('click', () => {
-            showPage(3);
-        });
+        // CSS for snowflakes
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh);
+                    opacity: 0;
+                }
+            }
+            .snowflake {
+                position: absolute;
+                top: -10px;
+                animation: fall linear infinite;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
-
 </body>
 </html>
