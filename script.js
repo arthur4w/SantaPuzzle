@@ -1,103 +1,51 @@
-const startBtn = document.getElementById('start-btn');
-const nextBtn = document.getElementById('next-btn');
-const quizSection = document.getElementById('quiz-section');
-const questionContainer = document.getElementById('question-container');
-const resultSection = document.getElementById('result-section');
-const resultText = document.getElementById('result');
-const spinSection = document.getElementById('spin-section');
-const spinButton = document.getElementById('spinButton');
-const pointer = document.getElementById('pointer');
-let spinning = false;
-
-// Show spin section after answering quiz questions
-function showSpinSection() {
-    quizSection.classList.add('hidden');
-    spinSection.classList.remove('hidden');
+// Snowflake Effect
+for (let i = 0; i < 30; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+    snowflake.textContent = '❄';
+    document.body.appendChild(snowflake);
 }
 
-// Spinning logic with a controlled outcome
-spinButton.addEventListener('click', () => {
-    if (spinning) return;
-    spinning = true;
+// Page Navigation
+function showPage(page) {
+    document.querySelectorAll('div').forEach(div => div.classList.add('hidden'));
+    document.getElementById(`page${page}`).classList.remove('hidden');
+}
 
-    const finalResultDegrees = 720 + 270; // Always land on 270° (e.g., smallest sector)
-    const randomOffset = Math.random() * 360;
-    const totalDegrees = finalResultDegrees + randomOffset;
+// Wheel Setup
+let wheel = document.getElementById('wheel');
+let results = {
+    "Cooking": ["Perfume (smell good cooking)", "Spatula", "Cookbook", "Pasta Maker"],
+    "Traveling": ["Perfume (leave a trail)", "Backpack", "Plane Tickets", "Guidebook"],
+    "Binge Watching": ["Perfume (freshen up)", "Netflix Sub", "Projector", "Popcorn Machine"],
+    "Reading": ["Perfume (bookish scent)", "Novel Set", "Reading Lamp", "Bookmark"]
+};
+let selectedItems = [];
 
-    // Animate the wheel spin
-    wheel.style.transform = `rotate(${totalDegrees}deg)`;
+// Populate Wheel
+function generateWheel(activity) {
+    showPage(4);
+    document.getElementById('progress').classList.remove('hidden');
+    let progress = 0, bar = document.getElementById('progress-bar');
+    const interval = setInterval(() => {
+        progress += Math.random() * 20;
+        bar.style.width = `${Math.min(progress, 100)}%`;
+        if (progress >= 100) {
+            clearInterval(interval);
+            bar.style.width = '100%';
+            selectedItems = results[activity];
+            wheel.style.background = "conic-gradient(#e63946 0% 5%, #457b9d 5% 33%, #a8dadc 33% 61%, #f1faee 61% 100%)";
+        }
+    }, 300);
+}
 
+// Spin Logic
+function spinWheel() {
+    wheel.style.transform = 'rotate(1080deg)';
     setTimeout(() => {
-        pointer.style.transform = 'rotate(90deg)'; // Pointer "falls"
-    }, 1500);
-
-    setTimeout(() => {
-        alert("Congratulations! Your Secret Santa gift has been revealed!");
-        spinning = false;
+        document.getElementById('result').innerText = `You won ${selectedItems[0]} 🎁!`;
+        showPage(5);
     }, 3000);
-});
-
-// Trigger spin section after quiz
-nextBtn.addEventListener('click', () => {
-    collectAnswer();
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
-        showQuestion();
-    } else {
-        showSpinSection();
-    }
-});
-
-
-const questions = [
-  { question: 'What’s your favorite color?', options: ['Red', 'Blue', 'Green', 'Yellow'] },
-  { question: 'Choose a hobby:', options: ['Reading', 'Gaming', 'Cooking', 'Traveling'] },
-];
-
-let currentQuestionIndex = 0;
-let answers = [];
-
-startBtn.addEventListener('click', () => {
-  startBtn.classList.add('hidden');
-  quizSection.classList.remove('hidden');
-  showQuestion();
-});
-
-nextBtn.addEventListener('click', () => {
-  collectAnswer();
-  currentQuestionIndex++;
-  if (currentQuestionIndex < questions.length) {
-    showQuestion();
-  } else {
-    showResult();
-  }
-});
-
-function showQuestion() {
-  questionContainer.innerHTML = '';
-  const question = questions[currentQuestionIndex];
-  const questionElem = document.createElement('h3');
-  questionElem.textContent = question.question;
-  questionContainer.appendChild(questionElem);
-
-  question.options.forEach(option => {
-    const button = document.createElement('button');
-    button.textContent = option;
-    button.classList.add('option-btn');
-    button.addEventListener('click', () => {
-      answers[currentQuestionIndex] = option;
-      nextBtn.classList.remove('hidden');
-    });
-    questionContainer.appendChild(button);
-  });
-}
-
-function collectAnswer() {
-  nextBtn.classList.add('hidden');
-}
-
-function showResult() {
-  quizSection.classList.add('hidden');
-  resultSection.classList.remove('hidden');
-  resultText.textContent = `Your perfect gift: ${answers.join(' & ')}`;
 }
