@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Christmas Puzzle</title>
-    <!-- Add a Christmas theme favicon -->
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Christmas_tree_icon.png/1024px-Christmas_tree_icon.png">
     <style>
         /* General Styles */
@@ -13,10 +12,10 @@
             margin: 0;
             padding: 0;
             text-align: center;
-            background: url('https://i.imgur.com/YbscNnW.jpg') no-repeat center center fixed;
+            background: url('https://i.imgur.com/hLsQSTV.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
-            overflow: hidden; /* No scrollbars */
+            overflow: hidden;
         }
 
         h1 {
@@ -49,7 +48,7 @@
         }
 
         .option {
-            flex: 1 1 40%; /* Two columns with flexibility */
+            flex: 1 1 40%;
             margin: 10px;
             padding: 15px;
             background-color: rgba(255, 0, 0, 0.8);
@@ -60,6 +59,15 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .option img {
+            position: absolute;
+            left: -25px;
+            top: -10px;
+            width: 30px;
+            height: 30px;
         }
 
         .option:hover {
@@ -103,10 +111,18 @@
 
     <!-- Options Section -->
     <div class="options-container" id="optionsContainer">
-        <div class="option" onclick="selectOption('Option 1')">Option 1</div>
-        <div class="option" onclick="selectOption('Option 2')">Option 2</div>
-        <div class="option" onclick="selectOption('Option 3')">Option 3</div>
-        <div class="option" onclick="selectOption('Option 4')">Option 4</div>
+        <div class="option" onclick="selectOption('Option 1')">
+            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 1
+        </div>
+        <div class="option" onclick="selectOption('Option 2')">
+            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 2
+        </div>
+        <div class="option" onclick="selectOption('Option 3')">
+            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 3
+        </div>
+        <div class="option" onclick="selectOption('Option 4')">
+            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 4
+        </div>
     </div>
 
     <!-- Footer -->
@@ -127,8 +143,8 @@
             snowflake.classList.add('snowflake');
             snowflake.textContent = '❄';
             snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
-            snowflake.style.fontSize = Math.random() * 1.5 + 1 + 'em'; // Random size
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.fontSize = Math.random() * 1.5 + 1 + 'em';
             document.body.appendChild(snowflake);
             snowflakes.push(snowflake);
         }
@@ -139,7 +155,11 @@
             optionsContainer.style.opacity = 0;
 
             setTimeout(() => {
-                optionsContainer.innerHTML = `<h2>You selected: <strong>${option}</strong></h2><p>🎉 Congratulations! Enjoy the festive spirit. 🎁</p>`;
+                optionsContainer.innerHTML = `
+                    <h2>You selected: <strong>${option}</strong></h2>
+                    <p>🎉 Congratulations! Enjoy the festive spirit. 🎁</p>
+                    <h3>Merry Christmas and a Happy New Year to Varun Jaiswal & everyone!</h3>
+                `;
                 optionsContainer.style.opacity = 1;
             }, 500);
         }
