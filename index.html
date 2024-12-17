@@ -8,188 +8,186 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background: #f0f8ff;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        /* Snowflakes */
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            opacity: 0.8;
+            user-select: none;
+            z-index: 999;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
             height: 100vh;
-            flex-direction: column;
         }
+
         h1 {
-            color: #ff6347;
-            font-size: 2em;
-            margin-bottom: 20px;
+            font-size: 36px;
+            color: #c0392b;
+            margin-top: 20px;
         }
+
+        #startButton, #nextButton {
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #startButton:hover, #nextButton:hover {
+            background-color: #c0392b;
+        }
+
         #wheel {
             width: 300px;
             height: 300px;
             border-radius: 50%;
             border: 5px solid #000;
             position: relative;
-            margin: 20px auto;
+            margin: 40px auto;
             background: conic-gradient(#f00 0% 25%, #0f0 25% 50%, #00f 50% 75%, #ff0 75% 100%);
-            transition: transform 3s ease-out;
         }
-        .wheel-sector {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            line-height: 300px;
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-            padding: 10px;
+
+        .option-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
         }
-        .wheel-sector p {
-            margin: 0;
+
+        .option-buttons button {
+            background: url('https://example.com/candy-cane.png') no-repeat center;
+            background-size: 20px 20px;
+            padding-left: 35px;
+            font-size: 16px;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
         }
+
+        .option-buttons button:hover {
+            background-color: #f39c12;
+        }
+
         .hidden {
             display: none;
-        }
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            font-size: 20px;
-            color: #fff;
-            animation: fall 5s linear infinite;
-        }
-        @keyframes fall {
-            0% { top: -10px; transform: translateX(0); }
-            100% { top: 100vh; transform: translateX(50px); }
-        }
-        #startButton, #againButton {
-            background-color: #ff6347;
-            padding: 15px 30px;
-            font-size: 16px;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #startButton:hover, #againButton:hover {
-            background-color: #ff4500;
         }
     </style>
 </head>
 <body>
-    <h1 id="heading">Secret Santa Celebration</h1>
-    <button id="startButton">Start Celebration</button>
-    <div id="page1" class="page">
-        <h1>Welcome to the Secret Santa Celebration!</h1>
-        <button id="startButton">Start Celebration</button>
-    </div>
-
-    <div id="page2" class="page hidden">
-        <h1 id="heading">Secret Santa</h1>
-        <div id="wheel">
-            <div class="wheel-sector" id="sector1">Perfume (To smell good while making food delicious)</div>
-            <div class="wheel-sector" id="sector2">Backpack (To carry most things you love)</div>
-            <div class="wheel-sector" id="sector3">Guidebook (So that you don't get lost)</div>
-            <div class="wheel-sector" id="sector4">Plane Tickets (You get to spend more during stay)</div>
+    <div id="container">
+        <h1>Secret Santa Celebration</h1>
+        <div id="page1" class="page">
+            <button id="startButton">Start Celebration</button>
         </div>
-        <button id="nextButton">Next</button>
-    </div>
-
-    <div id="page3" class="page hidden">
-        <h2>What would you like to do the most out of these activities?</h2>
-        <button class="optionButton" id="cookingButton">Cooking</button>
-        <button class="optionButton" id="travelingButton">Traveling</button>
-        <button class="optionButton" id="bingewatchingButton">Binge Watching</button>
-        <button class="optionButton" id="readingButton">Reading</button>
-    </div>
-
-    <div id="page4" class="page hidden">
-        <h2>Your choice is being processed...</h2>
-        <div id="progressBar" style="width: 100%; height: 20px; background-color: #ddd;">
-            <div id="progress" style="height: 100%; background-color: #4CAF50; width: 0;"></div>
+        <div id="page2" class="page hidden">
+            <div id="wheel"></div>
+            <button id="nextButton">Next</button>
         </div>
-    </div>
-
-    <div id="page5" class="page hidden">
-        <h2>And the gift you have won is...</h2>
-        <h3 id="gift"></h3>
-        <button id="againButton">Let's do that again</button>
+        <div id="page3" class="page hidden">
+            <h2>What would you like to do the most?</h2>
+            <div class="option-buttons">
+                <button id="cooking">Cooking</button>
+                <button id="traveling">Traveling</button>
+                <button id="bingeWatching">Binge Watching</button>
+                <button id="reading">Reading</button>
+            </div>
+            <button id="nextButton2" class="hidden">Next</button>
+        </div>
+        <div id="page4" class="page hidden">
+            <h2>Your gift is:</h2>
+            <div id="gift"></div>
+            <button id="repeatButton">Let's do that again</button>
+        </div>
     </div>
 
     <script>
-        let giftItems = [
-            { name: 'Perfume', description: 'To smell good while making food delicious', weight: 5 },
-            { name: 'Backpack', description: 'To carry most things you love', weight: Math.floor(Math.random() * (60 - 15 + 1)) + 15 },
-            { name: 'Guidebook', description: 'So that you don\'t get lost', weight: Math.floor(Math.random() * (60 - 15 + 1)) + 15 },
-            { name: 'Plane Tickets', description: 'You get to spend more during stay', weight: Math.floor(Math.random() * (60 - 15 + 1)) + 15 }
-        ];
-
-        let page = 1;
-
-        // Snowflakes
-        const snowflakeContainer = document.createElement('div');
-        document.body.appendChild(snowflakeContainer);
-        for (let i = 0; i < 50; i++) {
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.textContent = '❄️';
-            snowflake.style.fontSize = `${Math.random() * 10 + 10}px`;
-            snowflake.style.left = `${Math.random() * 100}%`;
-            snowflakeContainer.appendChild(snowflake);
+        // Snowflakes falling randomly
+        function createSnowflakes() {
+            const numberOfSnowflakes = 50;
+            for (let i = 0; i < numberOfSnowflakes; i++) {
+                let snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                snowflake.innerHTML = '❄';
+                snowflake.style.fontSize = Math.random() * 20 + 'px';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(snowflake);
+                snowflake.style.animation = `fall ${Math.random() * 10 + 5}s linear infinite`;
+            }
         }
 
-        // Show page 1
-        function showPage(pageNum) {
+        createSnowflakes();
+
+        // Show the next page
+        function showPage(pageNumber) {
             const pages = document.querySelectorAll('.page');
-            pages.forEach(p => p.classList.add('hidden'));
-            document.getElementById('page' + pageNum).classList.remove('hidden');
+            pages.forEach(page => page.classList.add('hidden'));
+            document.getElementById('page' + pageNumber).classList.remove('hidden');
         }
 
-        // Transition and update wheel items
+        // Page 1: Start celebration button
         document.getElementById('startButton').addEventListener('click', () => {
             showPage(2);
         });
 
+        // Page 2: Wheel setup
         document.getElementById('nextButton').addEventListener('click', () => {
             showPage(3);
         });
 
-        document.querySelectorAll('.optionButton').forEach(button => {
-            button.addEventListener('click', (e) => {
-                // Process the selected option
-                const selectedOption = e.target.id;
-
-                let sectorWeights = [5, Math.floor(Math.random() * (60 - 15 + 1)) + 15, Math.floor(Math.random() * (60 - 15 + 1)) + 15, Math.floor(Math.random() * (60 - 15 + 1)) + 15];
-                let totalWeight = sectorWeights.reduce((acc, w) => acc + w, 0);
-
-                // Update wheel sectors dynamically based on the option
-                const sectors = document.querySelectorAll('.wheel-sector');
-                giftItems.forEach((item, index) => {
-                    item.weight = sectorWeights[index];
-                    sectors[index].textContent = `${item.name} (${item.description})`;
-                });
-
-                // Show progress bar
-                showPage(4);
-                let progress = 0;
-                const progressBar = document.getElementById('progress');
-                const interval = setInterval(() => {
-                    progress += 2;
-                    progressBar.style.width = progress + '%';
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            showPage(5);
-                            document.getElementById('gift').textContent = 'Perfume (To smell good while making food delicious)';
-                        }, 500);
-                    }
-                }, 50);
-            });
+        // Page 3: Options
+        document.getElementById('cooking').addEventListener('click', () => {
+            // Handle selection logic
+            alert('Cooking selected!');
+            document.getElementById('nextButton2').classList.remove('hidden');
         });
 
-        document.getElementById('againButton').addEventListener('click', () => {
+        document.getElementById('traveling').addEventListener('click', () => {
+            // Handle selection logic
+            alert('Traveling selected!');
+            document.getElementById('nextButton2').classList.remove('hidden');
+        });
+
+        document.getElementById('bingeWatching').addEventListener('click', () => {
+            // Handle selection logic
+            alert('Binge Watching selected!');
+            document.getElementById('nextButton2').classList.remove('hidden');
+        });
+
+        document.getElementById('reading').addEventListener('click', () => {
+            // Handle selection logic
+            alert('Reading selected!');
+            document.getElementById('nextButton2').classList.remove('hidden');
+        });
+
+        // Page 4: Gift Reveal
+        document.getElementById('nextButton2').addEventListener('click', () => {
+            showPage(4);
+            document.getElementById('gift').innerHTML = 'Perfume (to smell good while making food delicious)'; // example gift
+        });
+
+        // Reset and restart the game
+        document.getElementById('repeatButton').addEventListener('click', () => {
             showPage(3);
         });
     </script>
+
 </body>
 </html>
