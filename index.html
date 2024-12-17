@@ -3,208 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret Santa Celebration</title>
+    <title>Santa Puzzle</title>
     <style>
         body {
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
+            background-color: #f0f0f0;
+            position: relative;
         }
 
-        /* Snowflakes */
+        .content {
+            text-align: center;
+            position: absolute;
+            z-index: 10;
+        }
+
+        #snowflakes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            visibility: hidden;
+            z-index: -1;
+        }
+
         .snowflake {
             position: absolute;
-            top: -10px;
-            z-index: 10;
-            font-size: 20px;
-            color: #fff;
-            user-select: none;
-            display: none;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            pointer-events: none;
+            animation: fall linear infinite;
         }
 
-        /* Wheel and Sectors */
+        @keyframes fall {
+            0% { top: -10px; transform: scale(0.5); }
+            100% { top: 100vh; transform: scale(1); }
+        }
+
         #wheel {
             width: 300px;
             height: 300px;
             border-radius: 50%;
             border: 5px solid #000;
-            position: relative;
-            margin: 0 auto 20px auto;
+            margin: 20px auto;
             background: conic-gradient(
-                #f00 0% 25%,    /* Example sector */
-                #0f0 25% 50%,   /* Example sector */
-                #00f 50% 75%,   /* Example sector */
-                #ff0 75% 100%   /* Example sector */
+                #f00 0% 30%, 
+                #0f0 30% 60%, 
+                #00f 60% 95%, 
+                #ff0 95% 100%
             );
-        }
-
-        .wheel-label {
-            position: absolute;
-            text-align: center;
-            width: 100%;
-            font-size: 14px;
-            color: #000;
-            font-weight: bold;
-            z-index: 1;
-        }
-
-        .wheel-labels {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .wheel-labels span {
+            position: relative;
             display: inline-block;
-            transform-origin: center;
-            transform: rotate(90deg);
-            width: 80px;
         }
 
-        /* Button */
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* Page Layout */
-        .content {
+        #pointer {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: -20px;
+            left: 140px;
+            width: 20px;
+            height: 50px;
+            background: #000;
+            transform-origin: top center;
+            z-index: 2;
         }
 
-        .question-container {
-            margin-top: 20px;
+        .page-btn {
+            background-color: #ff5733;
+            padding: 10px 20px;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
-        /* Progress Bar */
-        #progress {
-            width: 0;
-            height: 10px;
-            background: #4CAF50;
-            margin-top: 20px;
+        .page-btn:hover {
+            background-color: #e94e2d;
         }
     </style>
 </head>
 <body>
+    <div id="snowflakes"></div>
     <div class="content">
-        <!-- Page 1 -->
         <h1>Secret Santa Celebration</h1>
-        <button id="startButton">Start Celebration</button>
-
-        <!-- Page 2 (Spinning Wheel) -->
-        <div id="wheel">
-            <div class="wheel-labels">
-                <span id="label1">Item 1</span>
-                <span id="label2">Item 2</span>
-                <span id="label3">Item 3</span>
-                <span id="label4">Perfume</span>
-            </div>
-        </div>
-
-        <!-- Page 3 (Question and Options) -->
-        <div class="question-container" id="question-container">
-            <h3>What would you like to do the most?</h3>
-            <button class="option-btn" data-option="Cooking">Cooking</button>
-            <button class="option-btn" data-option="Traveling">Traveling</button>
-            <button class="option-btn" data-option="Binge watching">Binge watching</button>
-            <button class="option-btn" data-option="Reading">Reading</button>
-        </div>
-
-        <!-- Progress Bar -->
-        <div id="progress"></div>
+        <div id="wheel"></div>
+        <div id="pointer"></div>
+        <button class="page-btn" id="startBtn">Start Celebration</button>
     </div>
 
-    <div id="snowflakes-container"></div>
-
     <script>
-        let currentPage = 1;
-        const startButton = document.getElementById('startButton');
+        const snowflakesContainer = document.getElementById('snowflakes');
+        const startBtn = document.getElementById('startBtn');
         const wheel = document.getElementById('wheel');
-        const progressBar = document.getElementById('progress');
-        const snowflakesContainer = document.getElementById('snowflakes-container');
-        const questionContainer = document.getElementById('question-container');
-        const optionButtons = document.querySelectorAll('.option-btn');
+        const pointer = document.getElementById('pointer');
 
-        // Snowflakes Effect
-        function createSnowflake() {
-            let snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.textContent = '❄';
-            snowflake.style.left = Math.random() * window.innerWidth + 'px';
-            snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            snowflake.style.animationDelay = Math.random() * 2 + 's';
-            snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
-            snowflakesContainer.appendChild(snowflake);
-            snowflake.style.display = 'block';
-        }
-
-        function startSnowfall() {
-            setInterval(createSnowflake, 100);
-        }
-
-        startButton.addEventListener('click', function() {
-            currentPage++;
-            updatePage();
-            startSnowfall(); // Snowfall starts on page transition
-        });
-
-        // Handle Option Selection
-        optionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const selectedOption = button.getAttribute('data-option');
-                processSelection(selectedOption);
-            });
-        });
-
-        function processSelection(option) {
-            questionContainer.style.display = 'none'; // Hide options
-            progressBar.style.width = '100%'; // Simulate processing
-
-            // After processing, generate wheel sectors dynamically
-            setTimeout(() => {
-                generateWheelItems(option);
-            }, 1500); // Wait for progress bar to fill before proceeding
-        }
-
-        function generateWheelItems(option) {
-            const wheelLabels = ['Backpack', 'Guidebook', 'Plane Tickets', 'Perfume']; // Example data
-            const labels = [document.getElementById('label1'), document.getElementById('label2'), document.getElementById('label3'), document.getElementById('label4')];
-
-            labels.forEach((label, index) => {
-                label.textContent = wheelLabels[index];
-            });
-
-            // Proceed to next page (spinning page)
-            currentPage++;
-            updatePage();
-        }
-
-        // Update page based on the page number
-        function updatePage() {
-            switch (currentPage) {
-                case 2:
-                    questionContainer.style.display = 'block'; // Show question page
-                    break;
-                case 3:
-                    // Spin the wheel and announce results here
-                    break;
+        function createSnowflakes() {
+            const numberOfSnowflakes = 30;
+            for (let i = 0; i < numberOfSnowflakes; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                snowflake.style.width = `${Math.random() * 10 + 5}px`;
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.left = `${Math.random() * window.innerWidth}px`;
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                snowflakesContainer.appendChild(snowflake);
             }
         }
+
+        function startFalling() {
+            snowflakesContainer.style.visibility = 'visible';
+        }
+
+        function spinWheel() {
+            const degrees = 360 * 5; // Spin 5 full rotations
+            wheel.style.transition = 'transform 5s ease-out';
+            wheel.style.transform = `rotate(${degrees}deg)`;
+        }
+
+        startBtn.addEventListener('click', () => {
+            startBtn.style.display = 'none'; // Hide Start button after click
+            createSnowflakes();
+            startFalling();
+            setTimeout(spinWheel, 1000); // Start the wheel spin after snowflakes start falling
+        });
     </script>
 </body>
 </html>
