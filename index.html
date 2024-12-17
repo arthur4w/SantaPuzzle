@@ -1,32 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secret Santa</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Puzzle</title>
+    <!-- Add a Christmas theme favicon -->
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Christmas_tree_icon.png/1024px-Christmas_tree_icon.png">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: url('https://i.imgur.com/YbscNnW.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            overflow: hidden; /* No scrollbars */
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        /* Twinkling Christmas lights */
+        .lights {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            background: url('https://i.imgur.com/zy2jwAr.png') repeat-x;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.7; }
+        }
+
+        /* Options in two-column layout */
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 80%;
+        }
+
+        .option {
+            flex: 1 1 40%; /* Two columns with flexibility */
+            margin: 10px;
+            padding: 15px;
+            background-color: rgba(255, 0, 0, 0.8);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .option:hover {
+            background-color: rgba(0, 255, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        /* Snowfall Animation */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Decorative footer */
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            font-size: 1em;
+            color: #ddd;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Secret Santa: Choose Your Path</h1>
-    <p>Make your selections below to receive a personalized gift!</p>
-    <button id="start-btn">Start</button>
-    <div id="quiz-section" class="hidden">
-      <div id="question-container"></div>
-      <button id="next-btn" class="hidden">Next</button>
+    <!-- Twinkling Lights -->
+    <div class="lights"></div>
+
+    <!-- Page Header -->
+    <h1>🎄 Merry Christmas! 🎄</h1>
+
+    <!-- Options Section -->
+    <div class="options-container" id="optionsContainer">
+        <div class="option" onclick="selectOption('Option 1')">Option 1</div>
+        <div class="option" onclick="selectOption('Option 2')">Option 2</div>
+        <div class="option" onclick="selectOption('Option 3')">Option 3</div>
+        <div class="option" onclick="selectOption('Option 4')">Option 4</div>
     </div>
 
-    <div id="result-section" class="hidden">
-      <h2>Your Gift is Ready!</h2>
-      <p id="result"></p>
-    </div>
-     <div id="spin-section" class="hidden">
-    <h2>Spin the Wheel!</h2>
-    <div id="pointer"></div>
-    <div id="wheel"></div>
-    <button id="spinButton">Spin</button>
-</div>
-  </div>
-  <script src="script.js"></script>
+    <!-- Footer -->
+    <footer>Made with ❤️ for the Christmas Spirit</footer>
+
+    <!-- Background Music -->
+    <audio autoplay loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- JavaScript for Snowfall and Option Handling -->
+    <script>
+        // Snowfall Effect
+        const snowflakes = [];
+        for (let i = 0; i < 50; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.textContent = '❄';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
+            snowflake.style.fontSize = Math.random() * 1.5 + 1 + 'em'; // Random size
+            document.body.appendChild(snowflake);
+            snowflakes.push(snowflake);
+        }
+
+        // Handle Option Selection
+        function selectOption(option) {
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.style.opacity = 0;
+
+            setTimeout(() => {
+                optionsContainer.innerHTML = `<h2>You selected: <strong>${option}</strong></h2><p>🎉 Congratulations! Enjoy the festive spirit. 🎁</p>`;
+                optionsContainer.style.opacity = 1;
+            }, 500);
+        }
+    </script>
 </body>
 </html>
