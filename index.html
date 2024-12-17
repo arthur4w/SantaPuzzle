@@ -112,16 +112,16 @@
     <!-- Options Section -->
     <div class="options-container" id="optionsContainer">
         <div class="option" onclick="selectOption('Option 1')">
-            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 1
+            <img src="https://www.freeiconspng.com/uploads/candy-cane-icon-png-7.png" alt="Candy Cane"> Option 1
         </div>
         <div class="option" onclick="selectOption('Option 2')">
-            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 2
+            <img src="https://www.freeiconspng.com/uploads/candy-cane-icon-png-7.png" alt="Candy Cane"> Option 2
         </div>
         <div class="option" onclick="selectOption('Option 3')">
-            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 3
+            <img src="https://www.freeiconspng.com/uploads/candy-cane-icon-png-7.png" alt="Candy Cane"> Option 3
         </div>
         <div class="option" onclick="selectOption('Option 4')">
-            <img src="https://i.imgur.com/yVzA1El.png" alt="Candy Cane"> Option 4
+            <img src="https://www.freeiconspng.com/uploads/candy-cane-icon-png-7.png" alt="Candy Cane"> Option 4
         </div>
     </div>
 
@@ -136,15 +136,17 @@
 
     <!-- JavaScript for Snowfall and Option Handling -->
     <script>
-        // Snowfall Effect
+        // Snowfall Effect (Random Movement)
         const snowflakes = [];
         for (let i = 0; i < 50; i++) {
             const snowflake = document.createElement('div');
             snowflake.classList.add('snowflake');
             snowflake.textContent = '❄';
             snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            snowflake.style.fontSize = Math.random() * 1.5 + 1 + 'em';
+            snowflake.style.animationDuration = Math.random() * 5 + 3 + 's';
+            snowflake.style.animationDelay = Math.random() * 5 + 's';
+            snowflake.style.fontSize = Math.random() * 2 + 1 + 'em';
+            snowflake.style.transform = `rotate(${Math.random() * 360}deg)`;
             document.body.appendChild(snowflake);
             snowflakes.push(snowflake);
         }
